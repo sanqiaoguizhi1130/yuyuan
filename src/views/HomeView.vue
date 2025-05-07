@@ -17,11 +17,11 @@ export default {
     data() {
         return {
             panels: [
-                { title: '相册', image: 'https://z4a.net/images/2024/11/08/IMG_20240227_180516.jpg' },
-                { title: '菜谱', image: 'https://z4a.net/images/2024/11/08/IMG_20231201_233058.jpg' },
-                { title: '备忘录', image: 'https://z4a.net/images/2024/11/08/IMG_20241107_232210.jpg' },
-                { title: '音乐', image: 'https://z4a.net/images/2024/11/08/IMG_20231027_224814.jpg' },
-                { title: '未完待续', image: 'https://z4a.net/images/2024/11/08/dji_mimo_20241102_220752_0_1730556864825_photo.jpg' },
+                { title: '相册', image: require('../assets/xiangce.jpg') },
+                { title: '菜谱', image: require('../assets/菜谱.jpg') },
+                { title: '备忘录', image: require('../assets/备忘录.jpg') },
+                { title: '音乐', image: require('../assets/音乐.jpg') },
+                { title: '未完待续', image: require('../assets/未完待续.jpg') },
             ],
             activePanel: 0
         };
