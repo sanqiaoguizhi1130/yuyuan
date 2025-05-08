@@ -44,7 +44,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useAlbums } from '../../composables/useAlbums'
+import { usepetAlbums } from '../../composables/usePet.js'
 
 const {
   photos,
@@ -54,7 +54,7 @@ const {
   deletePhoto,
   uploadImage,
   initRealtime
-} = useAlbums()
+} = usepetAlbums()
 
 const fileInput = ref(null)
 const activePhoto = ref(null)
@@ -214,6 +214,7 @@ const deleteCurrentPhoto = async () => {
 }
 
 .bg {
+  height: 100vh;
   background: linear-gradient(to right, #FFC0CB, #ADD8E6);
 }
 

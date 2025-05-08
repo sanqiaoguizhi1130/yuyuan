@@ -15,7 +15,7 @@ console.log('[安全调试] 环境参数:', {
     key: process.env.VUE_APP_SUPABASE_KEY ?.slice(0, 6) + '...'
 })
 
-export const supabase = createClient(supabaseUrl, supabaseKey, {
+export const petsupabase = createClient(supabaseUrl, supabaseKey, {
     db: { schema: 'public', convertCamelCaseToSnakeCase: true },
     auth: {
         flowType: 'pkce',
@@ -24,13 +24,13 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
     }
 })
 // 添加存储初始化校验
-supabase.storage.getBucket('photos')
+petsupabase.storage.getBucket('pet')
   .then(res => {
-    if (res.error) throw new Error(`芋圆存储桶连接失败: ${res.error.message}`);
-    console.log('✔️ 芋圆存储桶连接成功');
+    if (res.error) throw new Error(`圃圃存储桶连接失败: ${res.error.message}`);
+    console.log('✔️ 圃圃存储桶连接成功');
   })
   .catch(err => {
     console.error('❌ 严重错误:', err);
     throw err; // 阻止应用继续运行
   });
-  window.supabase = supabase;
+  window.supabase = petsupabase;

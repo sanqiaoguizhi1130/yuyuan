@@ -27,10 +27,11 @@ import { ref } from 'vue'
 
 // 全局导航配置
 const globalNavItems = ref([
-  { name: '相册', path: '/album' },
+  { name: '首页', path: '/' },
+  { name: '我们', path: '/album' },
+  { name: '可爱圃', path: '/petphotos' },
   { name: '菜谱', path: '/cookmenu' },
   { name: '备忘录', path: '/memorandum' },
-  { name: '音乐', path: '/music' },
   { name: '未完待续', path: '/' },
 
 ])
@@ -75,8 +76,8 @@ body {
     padding: 0.5rem 3rem;
   }
   to {
-    background: rgba(0, 0, 0, 0);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(15px);
     padding: 0.5rem 3rem;
   }
 }

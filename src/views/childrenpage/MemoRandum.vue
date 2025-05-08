@@ -612,4 +612,48 @@ const getCategoryIcon = (category) => {
   100% { transform: scale(1); }
 }
 
+.edit-btn,
+.delete-btn {
+  background: #6cddff;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: 
+    background-color 0.3s ease,
+    transform 0.2s ease;
+  margin-left: 0.5rem;
+}
+
+.edit-btn:hover,
+.delete-btn:hover {
+  background: #3db8ff;
+  transform: translateY(-1px);
+}
+
+.delete-btn {
+  background: #ff6b6b;
+}
+
+.delete-btn:hover {
+  background: #ff5252;
+}
+
+/* 微调按钮在元信息区的排列 */
+.memo-meta {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.countdown-badge,
+.edit-btn,
+.delete-btn {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+
 </style>

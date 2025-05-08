@@ -5,6 +5,8 @@ import Cookmenu from '../views/childrenpage/CookMenu.vue'
 import AlBum from '../views/childrenpage/AlBum.vue'
 import MemoRandum from '../views/childrenpage/MemoRandum.vue'
 import MusicForm from '../views/childrenpage/MusicForm.vue';
+import PetPhotos from '../views/childrenpage/PetPhotos.vue';
+
 
 
 
@@ -19,6 +21,11 @@ const routes = [{
     path: '/album',
     name: 'album',
     component: AlBum,
+  },
+  {
+    path: '/petphotos',
+    name: 'petphotos',
+    component: PetPhotos,
   },
   {
     path: '/cookmenu',

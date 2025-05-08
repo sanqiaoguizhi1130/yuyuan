@@ -357,7 +357,7 @@ export default {
 .close-btn {
   position: absolute;
   right: 1rem;
-  top: 1rem;
+  top: 3rem;
   font-size: 1.5rem;
   width: 40px;
   height: 40px;
