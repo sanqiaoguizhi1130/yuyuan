@@ -6,6 +6,7 @@ import AlBum from '../views/childrenpage/AlBum.vue'
 import MemoRandum from '../views/childrenpage/MemoRandum.vue'
 import MusicForm from '../views/childrenpage/MusicForm.vue';
 import PetPhotos from '../views/childrenpage/PetPhotos.vue';
+import MessageBoard from '../views/childrenpage/MessageBoard.vue';
 
 
 
@@ -36,6 +37,11 @@ const routes = [{
     path: '/memorandum',
     name: 'memorandum',
     component: MemoRandum,
+  },
+  {
+    path: '/messageboard',
+    name: 'messageboard',
+    component: MessageBoard,
   },
   {
     path: '/music',

@@ -6,6 +6,7 @@
         <path d="M20 11H7.414l4.293-4.293-1.414-1.414L3.586 12l6.707 6.707 1.414-1.414L7.414 13H20z" />
       </svg>
     </router-link>
+    <h1 class="module-title">📷 最好的我们</h1>
     <!-- 简单上传区域 -->
     <div class="simple-upload" @click="$refs.fileInput.click()">
       <span>📤 点击或拖放照片到此处上传</span>
@@ -215,6 +216,7 @@ const deleteCurrentPhoto = async () => {
 
 .bg {
   background: linear-gradient(to right, #FFC0CB, #ADD8E6);
+  min-height: 100vh;
 }
 
 .album-container {
@@ -321,5 +323,11 @@ const deleteCurrentPhoto = async () => {
 .back-button:hover {
   color: #2196F3;
   transform: translateX(-3px);
+}
+
+.module-title {
+    text-align: center;
+    color: #666;
+    margin-top: 30px;
 }
 </style>

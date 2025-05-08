@@ -235,7 +235,7 @@ export default {
 <style scoped>
 
 .bg {
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(to right, #FFC0CB, #ADD8E6);
 }
 .recipe-app {

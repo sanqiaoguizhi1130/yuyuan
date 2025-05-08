@@ -5,9 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "electron:serve": "vue-cli-service electron:serve",
-    "electron:build": "vue-cli-service electron:build"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",

@@ -1,6 +1,6 @@
 // src/composables/useAlbums.js
 import { ref } from "vue";
-import { petsupabase } from '../supabase/pet.js'; // 或你的存放路径
+import { supabase } from '../supabase/client.js'; // 或你的存放路径
 
 
 export const usepetAlbums = () => {
@@ -11,7 +11,7 @@ export const usepetAlbums = () => {
   const fetchPhotos = async () => {
     try {
       loading.value = true;
-      const { data, error: sbError } = await petsupabase
+      const { data, error: sbError } = await supabase
         .from("pet")
         .select("*")
         .order("created_at", { descending: true });
@@ -30,7 +30,7 @@ export const usepetAlbums = () => {
   const savePhoto = async (photo) => {
     try {
       loading.value = true;
-      const { data, error: sbError } = await petsupabase
+      const { data, error: sbError } = await supabase
         .from("pet")
         .insert([
           {
@@ -53,7 +53,7 @@ export const usepetAlbums = () => {
   const deletePhoto = async (id) => {
     try {
       loading.value = true;
-      const { data, error: fetchError } = await petsupabase
+      const { data, error: fetchError } = await supabase
         .from("pet")
         .select("path")
         .eq("id", id)
@@ -63,13 +63,13 @@ export const usepetAlbums = () => {
       if (!data) throw new Error("图片不存在");
   
       // ✅ 关键修正：直接使用存储的 path
-      const { error: storageError } = await petsupabase.storage
+      const { error: storageError } = await supabase.storage
         .from("pet")
         .remove([data.path]); // 直接使用数据库中的完整路径
   
       if (storageError) throw storageError;
   
-      const { error: deleteError } = await petsupabase
+      const { error: deleteError } = await supabase
         .from("pet")
         .delete()
         .eq("id", id);
@@ -95,7 +95,7 @@ export const usepetAlbums = () => {
         ? file.type 
         : 'application/octet-stream';
   
-      const { data, error } = await petsupabase.storage
+      const { data, error } = await supabase.storage
         .from('pet')
         .upload(fileName, file, {
           contentType: finalContentType, // 重要：覆盖不可靠的浏览器检测
@@ -107,7 +107,7 @@ export const usepetAlbums = () => {
       }
   
       // ✅ 安全获取路径：优先使用存储返回的 name 字段
-      const { data: urlData } = await petsupabase.storage
+      const { data: urlData } = await supabase.storage
         .from('pet')
         .getPublicUrl(data.path); 
   
@@ -124,7 +124,7 @@ export const usepetAlbums = () => {
 
 
   const initRealtime = () => {
-    return petsupabase
+    return supabase
       .channel("public-photos")
       .on(
         "postgres_changes",

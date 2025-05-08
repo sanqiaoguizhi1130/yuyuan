@@ -1,18 +1,26 @@
 <!-- src/App.vue -->
 <template>
   <div class="app-layout">
+    <div class="music-player">
+        <button class="play-button" @click="togglePlay">
+        </button>
+
+        <div class="track-info">
+          <div class="title">{{ currentTrack?.title || 'Loading...' }}</div>
+          <div class="artist">{{ currentTrack?.artist }}</div>
+        </div>
+
+        <audio ref="audioPlayer" @timeupdate="updateProgress"></audio>
+        
+      </div>
     <!-- 固定导航栏 -->
     <nav class="global-nav">
-      <router-link 
-        v-for="item in globalNavItems" 
-        :key="item.path" 
-        :to="item.path"
-        class="nav-link"
-      >
+      <router-link v-for="item in globalNavItems" :key="item.path" :to="item.path" class="nav-link">
         {{ item.name }}
       </router-link>
+      
     </nav>
-    
+
     <!-- 页面内容区域 -->
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
@@ -23,7 +31,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useMusic } from '../src/composables/useMusic.js'
+import { supabase } from '../src/supabase/client.js';
+
+const { fetchMusic } = useMusic()
+const audioPlayer = ref(null)
+const isPlaying = ref(false)
+const progress = ref(0)
+const songs = ref([])
+const currentTrackIndex = ref(0)
+const currentTrack = computed(() => songs.value[currentTrackIndex.value])
+
+
 
 // 全局导航配置
 const globalNavItems = ref([
@@ -32,18 +52,69 @@ const globalNavItems = ref([
   { name: '可爱圃', path: '/petphotos' },
   { name: '菜谱', path: '/cookmenu' },
   { name: '备忘录', path: '/memorandum' },
-  { name: '未完待续', path: '/' },
+  { name: '树洞', path: '/messageboard' },
+  { name: '音乐', path: '/music' },
 
 ])
+
+
+const loadTrack = async () => {
+  try {
+    const { data } = await supabase
+      .from('music')
+      .select('*')
+      .order('created_at', { ascending: true })
+      .limit(1)
+    if (data?.length) {
+      const track = data[0]
+      songs.value = data
+      
+      // 调试输出
+      console.log('数据库记录:', track)
+      
+      // 生成音频 URL 的正确方式
+      const { data: urlData } = supabase.storage
+        .from('music') // 必须与实际存储桶名称一致
+        .getPublicUrl(track.path)
+      
+      console.log('生成的音频 URL:', urlData.publicUrl)
+      
+      audioPlayer.value.src = urlData.publicUrl
+      audioPlayer.value.load()
+      
+      // 增加元数据加载检测
+      audioPlayer.value.addEventListener('loadedmetadata', () => {
+        console.log('音频时长:', audioPlayer.value.duration)
+      })
+    }
+  } catch (err) {
+    console.error('加载失败:', err)
+  }
+}
+// 播放控制
+const togglePlay = () => {
+  isPlaying.value = !isPlaying.value
+  isPlaying.value ? audioPlayer.value.play() : audioPlayer.value.pause()
+}
+// 进度条更新
+const updateProgress = () => {
+  const percentage = (audioPlayer.value.currentTime / audioPlayer.value.duration) * 100
+  progress.value = percentage || 0
+}
+// 初始加载
+onMounted(async () => {
+  await fetchMusic()
+  await loadTrack()
+})
 </script>
 
 <style>
-
 body {
   margin: 0;
   overscroll-behavior-y: contain;
   scroll-behavior: smooth;
 }
+
 /* 全局布局样式 */
 .app-layout {
   min-height: 100vh;
@@ -55,8 +126,10 @@ body {
   top: 0;
   right: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0); /* 初始完全透明 */
-  backdrop-filter: blur(0px);  /* 初始无模糊 */
+  background: rgba(0, 0, 0, 0);
+  /* 初始完全透明 */
+  backdrop-filter: blur(0px);
+  /* 初始无模糊 */
   padding: 0.5rem 3rem;
   display: flex;
   justify-content: flex-end;
@@ -67,14 +140,17 @@ body {
   animation-timeline: scroll(root);
   animation-range: 0px 200px;
   /* 在已存在的样式基础上增加 */
-  transform-style: preserve-3d; /* 分离图层 */
+  transform-style: preserve-3d;
+  /* 分离图层 */
 }
+
 @keyframes nav-scroll-effect {
   from {
     background: rgba(0, 0, 0, 0);
     backdrop-filter: blur(0px);
     padding: 0.5rem 3rem;
   }
+
   to {
     background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(15px);
@@ -121,10 +197,12 @@ body {
 .fade-leave-active {
   transition: opacity 0.3s, transform 0.3s;
 }
+
 .fade-enter-from {
   opacity: 0;
   transform: translateY(10px);
 }
+
 .fade-leave-to {
   opacity: 0;
   transform: translateY(-10px);
@@ -136,10 +214,81 @@ body {
     gap: 1rem;
     justify-content: center;
   }
-  
+
   .nav-link {
     font-size: 0.9rem;
     padding: 0.4rem 0.8rem;
   }
+}
+
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  left: 15%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 12px 20px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.play-button {
+  background: rgba(74, 194, 246, 0.722);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.play-button:hover {
+  transform: scale(1.1);
+}
+
+.play-button i {
+  color: #333;
+  font-size: 16px;
+}
+
+.track-info {
+  color: white;
+  min-width: 160px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.artist {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.progress-bar {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: #ffffff;
+  transition: width 0.5s linear;
+}
+
+audio {
+  display: none;
 }
 </style>

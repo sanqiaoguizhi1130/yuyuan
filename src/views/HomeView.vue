@@ -168,7 +168,7 @@ export default {
 
 .container {
     display: flex;
-    width: 90vw;
+    width: 70vw;
     align-items: center;
     /* 垂直居中 */
     justify-content: center;
@@ -176,14 +176,13 @@ export default {
 }
 
 .panel {
-    height: 100vh;
     width: 100%;
     /* 跟封面一样大小 */
     background-size: cover;
     /* 把封面图片居中 */
     background-position: center;
     background-repeat: no-repeat;
-    height: 80vh;
+    height: 70vh;
     /* 边框圆角 */
     border-radius: 50px;
     color: #fff;

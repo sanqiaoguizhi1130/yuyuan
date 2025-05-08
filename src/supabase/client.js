@@ -33,4 +33,23 @@ supabase.storage.getBucket('photos')
     console.error('❌ 严重错误:', err);
     throw err; // 阻止应用继续运行
   });
+
+  supabase.storage.getBucket('music')
+  .then(res => {
+    if (res.error) throw new Error(`音乐存储桶连接失败: ${res.error.message}`);
+    console.log('✔️ 音乐存储桶连接成功');
+  })
+  .catch(err => {
+    console.error('❌ 音乐存储桶错误:', err);
+    throw err;
+  });
+  supabase.storage.getBucket('pet')
+    .then(res => {
+      if (res.error) throw new Error(`圃圃存储桶连接失败: ${res.error.message}`);
+      console.log('✔️ 圃圃存储桶连接成功');
+    })
+    .catch(err => {
+      console.error('❌ 严重错误:', err);
+      throw err; // 阻止应用继续运行
+    });
   window.supabase = supabase;
