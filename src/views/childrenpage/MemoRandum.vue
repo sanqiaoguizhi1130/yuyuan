@@ -1,6 +1,7 @@
 <!-- MemoRandum.vue -->
 <template>
-  <div class="memo-container">
+  <div class="bg">
+    <div class="memo-container">
     <router-link to="/" class="back-button">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
         <path d="M20 11H7.414l4.293-4.293-1.414-1.414L3.586 12l6.707 6.707 1.414-1.414L7.414 13H20z" />
@@ -97,6 +98,7 @@
       <img src="https://cdn-icons-png.flaticon.com/512/3392/3392699.png" alt="空状态" class="empty-icon">
       <p>暂时没有记忆记录，点击右上角添加第一个温馨提醒吧～</p>
     </div>
+  </div>
   </div>
 </template>
 
@@ -293,15 +295,21 @@ const getCategoryIcon = (category) => {
 </script>
 
 <style scoped>
+
+.bg {
+  height: 100vh;
+  background: linear-gradient(to right, #FFC0CB, #ADD8E6);
+}
 .memo-container {
   max-width: 800px;
-  margin: 2rem auto;
+  margin: auto;
   padding: 1rem;
   font-family: 'Microsoft YaHei', sans-serif;
 }
 
 .memo-header {
   display: flex;
+  margin-top: 3rem;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
@@ -573,14 +581,18 @@ const getCategoryIcon = (category) => {
 }
 
 .back-button {
-  position: absolute;
+  position: fixed;
   left: 20px;
   top: 20px;
-  color: #666;
+  color: #ffffff;
   transition: all 0.3s;
   display: flex;
   align-items: center;
-  z-index: 100;
+  z-index: 10001;
+  transform: translateZ(1px); /* 创建独立渲染层 */
+  will-change: transform; /* 优化动画性能 */
+  pointer-events: auto; /* 确保点击穿透 */
+  line-height: 0;   /* 消除行高导致的间隙 */
 }
 
 .back-button svg {

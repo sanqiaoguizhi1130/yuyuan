@@ -1,5 +1,6 @@
 <template>
-  <div class="recipe-app">
+  <div class="bg">
+    <div class="recipe-app">
     <router-link to="/" class="back-button">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
         <path d="M20 11H7.414l4.293-4.293-1.414-1.414L3.586 12l6.707 6.707 1.414-1.414L7.414 13H20z" />
@@ -78,6 +79,7 @@
         </div>
       </div>
     </transition>
+  </div>
   </div>
 </template>
 
@@ -231,6 +233,11 @@ export default {
 </script>
 
 <style scoped>
+
+.bg {
+  height: 100vh;
+  background: linear-gradient(to right, #FFC0CB, #ADD8E6);
+}
 .recipe-app {
   max-width: 1200px;
   margin: 0 auto;
@@ -434,14 +441,18 @@ export default {
 }
 
 .back-button {
-  position: absolute;
+  position: fixed;
   left: 20px;
   top: 20px;
-  color: #666;
+  color: #ffffff;
   transition: all 0.3s;
   display: flex;
   align-items: center;
-  z-index: 100;
+  z-index: 10001;
+  transform: translateZ(1px); /* 创建独立渲染层 */
+  will-change: transform; /* 优化动画性能 */
+  pointer-events: auto; /* 确保点击穿透 */
+  line-height: 0;   /* 消除行高导致的间隙 */
 }
 
 .back-button svg {

@@ -1,5 +1,6 @@
 <template>
-  <div class="album-container">
+  <div class="bg">
+    <div class="album-container">
     <router-link to="/" class="back-button">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
         <path d="M20 11H7.414l4.293-4.293-1.414-1.414L3.586 12l6.707 6.707 1.414-1.414L7.414 13H20z" />
@@ -10,7 +11,6 @@
       <span>📤 点击或拖放照片到此处上传</span>
       <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" multiple style="display: none">
     </div>
-
     <!-- 显示错误信息 -->
     <div v-if="errorMsg" class="error-message">
       {{ errorMsg }}
@@ -19,30 +19,26 @@
         <pre style="white-space: pre-wrap">{{ errorDetails }}</pre>
       </details>
     </div>
-
     <!-- 加载状态 -->
     <div v-if="loading" class="simple-loader">
       <div class="spinner"></div>
     </div>
-
     <!-- 瀑布流相册 -->
     <div v-else class="waterfall-grid">
       <div v-for="photo in photos" :key="photo.id" class="photo-card" @click="showLightbox(photo)">
         <img :src="photo.url" :alt="photo.title || '相册图片'" loading="lazy">
-        <div v-if="photo.title" class="photo-caption">{{ photo.title }}</div>
       </div>
     </div>
-
     <!-- 简单查看大图 -->
     <div v-if="activePhoto" class="simple-lightbox" @click="activePhoto = null">
       <img :src="activePhoto.url" :alt="activePhoto.title || '相册图片'">
       <button class="delete-btn" @click.stop="deleteCurrentPhoto">🗑️ 删除</button>
     </div>
-
     <!-- 空状态 -->
     <div v-if="!photos.length && !loading" class="empty-message">
       <p>还没有照片，上传第一张照片吧！</p>
     </div>
+  </div>
   </div>
 </template>
 
@@ -172,7 +168,42 @@ const deleteCurrentPhoto = async () => {
 </script>
 
 <style scoped>
-/* 之前的样式保持不变，新增错误消息样式 */
+/* 修改部分样式 */
+.waterfall-grid {
+  column-count: 4;
+  column-gap: 15px;
+}
+
+.photo-card {
+  break-inside: avoid;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  cursor: pointer;
+  background: #fff;
+}
+
+.photo-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 1200px) {
+  .waterfall-grid {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .waterfall-grid {
+    column-count: 1;
+  }
+}
+
+/* 其他原有样式保持不变 */
 .error-message {
   margin: 10px 0;
   padding: 10px;
@@ -180,6 +211,10 @@ const deleteCurrentPhoto = async () => {
   color: #c62828;
   border-radius: 4px;
   text-align: center;
+}
+
+.bg {
+  background: linear-gradient(to right, #FFC0CB, #ADD8E6);
 }
 
 .album-container {
@@ -202,38 +237,6 @@ const deleteCurrentPhoto = async () => {
 .simple-upload:hover {
   background: rgba(0, 0, 0, 0.1);
   border-color: #999;
-}
-
-.waterfall-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 15px;
-}
-
-.photo-card {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s;
-  cursor: pointer;
-}
-
-.photo-card:hover {
-  transform: scale(1.02);
-}
-
-.photo-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  display: block;
-}
-
-.photo-caption {
-  padding: 10px;
-  font-size: 14px;
-  text-align: center;
-  background: white;
 }
 
 .simple-lightbox {
@@ -294,14 +297,18 @@ const deleteCurrentPhoto = async () => {
 }
 
 .back-button {
-  position: absolute;
+  position: fixed;
   left: 20px;
   top: 20px;
-  color: #666;
+  color: #ffffff;
   transition: all 0.3s;
   display: flex;
   align-items: center;
-  z-index: 100;
+  z-index: 10001;
+  transform: translateZ(1px); /* 创建独立渲染层 */
+  will-change: transform; /* 优化动画性能 */
+  pointer-events: auto; /* 确保点击穿透 */
+  line-height: 0;   /* 消除行高导致的间隙 */
 }
 
 .back-button svg {
@@ -313,16 +320,5 @@ const deleteCurrentPhoto = async () => {
 .back-button:hover {
   color: #2196F3;
   transform: translateX(-3px);
-}
-
-@media (max-width: 768px) {
-  .waterfall-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .photo-card img {
-    height: 150px;
-  }
 }
 </style>
