@@ -2,7 +2,7 @@
 <template>
     <div class="fullscreen-container">
         <div class="size">
-            <div class="center-text">感染他人，取悦自己</div>
+            <div class="center-text">我很的爱你 句句不轻易</div>
         </div>
         <div class="gradient-background">
             <div class="centertext">芋圆物语</div>
@@ -150,7 +150,7 @@ export default {
 }
 
 .gradient-background {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
     /* 引入字体 */
     font-family: 'Muli', sans-serif;

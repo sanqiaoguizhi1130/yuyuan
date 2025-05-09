@@ -2,23 +2,30 @@
 <template>
   <div class="app-layout">
     <div class="music-player">
-        <button class="play-button" @click="togglePlay">
-        </button>
+      <button class="play-button" @click="togglePlay">
+        <svg v-if="!isPlaying" class="icon" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M8 5v14l11-7z" />
+        </svg>
 
-        <div class="track-info">
-          <div class="title">{{ currentTrack?.title || 'Loading...' }}</div>
-          <div class="artist">{{ currentTrack?.artist }}</div>
-        </div>
+        <svg v-else class="icon" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M6 4h4v16H6zm8 0h4v16h-4z" />
+        </svg>
+      </button>
 
-        <audio ref="audioPlayer" @timeupdate="updateProgress"></audio>
-        
+      <div class="track-info">
+        <div class="title">{{ currentTrack?.title || 'Loading...' }}</div>
+        <div class="artist">{{ currentTrack?.artist }}</div>
       </div>
+
+      <audio ref="audioPlayer" @timeupdate="updateProgress"></audio>
+
+    </div>
     <!-- 固定导航栏 -->
     <nav class="global-nav">
       <router-link v-for="item in globalNavItems" :key="item.path" :to="item.path" class="nav-link">
         {{ item.name }}
       </router-link>
-      
+
     </nav>
 
     <!-- 页面内容区域 -->
@@ -37,7 +44,7 @@ import { supabase } from '../src/supabase/client.js';
 
 const { fetchMusic } = useMusic()
 const audioPlayer = ref(null)
-const isPlaying = ref(false)
+const isPlaying = ref(true)
 const progress = ref(0)
 const songs = ref([])
 const currentTrackIndex = ref(0)
@@ -68,24 +75,39 @@ const loadTrack = async () => {
     if (data?.length) {
       const track = data[0]
       songs.value = data
-      
+
       // 调试输出
       console.log('数据库记录:', track)
-      
+
       // 生成音频 URL 的正确方式
       const { data: urlData } = supabase.storage
         .from('music') // 必须与实际存储桶名称一致
         .getPublicUrl(track.path)
-      
+
       console.log('生成的音频 URL:', urlData.publicUrl)
-      
+
       audioPlayer.value.src = urlData.publicUrl
-      audioPlayer.value.load()
-      
-      // 增加元数据加载检测
-      audioPlayer.value.addEventListener('loadedmetadata', () => {
-        console.log('音频时长:', audioPlayer.value.duration)
-      })
+      audioPlayer.value.autoplay = true
+      audioPlayer.value.muted = false // 确保未静音
+      console.log(audioPlayer.value);
+
+
+      const playPromise = audioPlayer.value.play()
+
+
+
+      // 处理现代浏览器的自动播放策略
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            isPlaying.value = true
+            console.log('自动播放成功')
+          })
+          .catch(error => {
+            isPlaying.value = false
+            console.log('自动播放被阻止:', error)
+          })
+      }
     }
   } catch (err) {
     console.error('加载失败:', err)
@@ -94,6 +116,9 @@ const loadTrack = async () => {
 // 播放控制
 const togglePlay = () => {
   isPlaying.value = !isPlaying.value
+  if (!isPlaying.value) {
+    audioPlayer.value.play()
+  }
   isPlaying.value ? audioPlayer.value.play() : audioPlayer.value.pause()
 }
 // 进度条更新
@@ -223,8 +248,8 @@ body {
 
 .music-player {
   position: fixed;
-  bottom: 20px;
-  left: 15%;
+  bottom: 15px;
+  left: 10%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
@@ -261,7 +286,7 @@ body {
 
 .track-info {
   color: white;
-  min-width: 160px;
+  min-width: 80px;
 }
 
 .title {
@@ -290,5 +315,16 @@ body {
 
 audio {
   display: none;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s;
+}
+
+/* 播放/暂停状态颜色变化 */
+.play-button {
+  background: rgb(255, 255, 255);
 }
 </style>
