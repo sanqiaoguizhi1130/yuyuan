@@ -6,11 +6,11 @@
         <path d="M20 11H7.414l4.293-4.293-1.414-1.414L3.586 12l6.707 6.707 1.414-1.414L7.414 13H20z" />
       </svg>
     </router-link>
-    <h1 class="module-title">🐱 可爱圃圃</h1>
+    <h1 class="module-title">可爱圃圃</h1>
 
     <!-- 简单上传区域 -->
     <div class="simple-upload" @click="$refs.fileInput.click()">
-      <span>📤 点击或拖放照片到此处上传</span>
+      <span>点击或拖放照片到此处上传</span>
       <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" multiple style="display: none">
     </div>
     <!-- 显示错误信息 -->
@@ -205,6 +205,50 @@ const deleteCurrentPhoto = async () => {
   }
 }
 
+@media (max-width: 480px) {
+  .album-container {
+    padding: 5px;
+  }
+  .module-title {
+    font-size: 1.2em;
+    margin-top: 15px;
+  }
+  .simple-upload {
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 1em;
+  }
+  .photo-card {
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  .simple-lightbox img {
+    max-width: 98vw;
+    max-height: 60vh;
+  }
+  .delete-btn {
+    padding: 8px 16px;
+    font-size: 1em;
+  }
+  .back-button {
+    left: 8px;
+    top: 8px;
+    width: 36px;
+    height: 36px;
+  }
+  .waterfall-grid {
+    column-count: 1;
+    column-gap: 8px;
+  }
+  .simple-upload {
+    font-size: 1em;
+  }
+  .empty-message {
+    padding: 20px;
+    font-size: 1em;
+  }
+}
+
 /* 其他原有样式保持不变 */
 .error-message {
   margin: 10px 0;
@@ -303,7 +347,7 @@ const deleteCurrentPhoto = async () => {
 .back-button {
   position: fixed;
   left: 20px;
-  top: 20px;
+  top: 6px;
   color: #ffffff;
   transition: all 0.3s;
   display: flex;

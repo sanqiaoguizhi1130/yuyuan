@@ -30,7 +30,6 @@
         :class="{ 'active': selectedRecipe?.name === recipe.name }"
       >
         <div class="card-content">
-          <span class="dish-icon">🍲</span>
           <h3 class="dish-name">{{ recipe.name }}</h3>
           <div class="dish-tags">
             <span v-for="tag in recipe.tags" :key="tag" class="tag">{{ tag }}</span>
@@ -251,7 +250,7 @@ export default {
 }
 
 .title {
-  color: #ff6b6b;
+  color: #666;
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
   text-shadow: 2px 2px 4px rgba(255, 107, 107, 0.2);
@@ -369,7 +368,7 @@ export default {
 }
 
 .recipe-title {
-  color: #ff6b6b;
+  color: #666;
   font-size: 2rem;
   margin-bottom: 1.5rem;
 }
@@ -443,7 +442,7 @@ export default {
 .back-button {
   position: fixed;
   left: 20px;
-  top: 20px;
+  top: 6px;
   color: #ffffff;
   transition: all 0.3s;
   display: flex;
@@ -476,6 +475,69 @@ export default {
   
   .category-filter {
     flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .recipe-app {
+    padding: 5px;
+  }
+  .header .title {
+    font-size: 1.2em;
+    margin-top: 15px;
+  }
+  .category-filter {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .filter-btn {
+    font-size: 0.95em;
+    padding: 6px 10px;
+  }
+  .dish-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .dish-card {
+    border-radius: 5px;
+    margin-bottom: 10px;
+    min-width: 0;
+  }
+  .recipe-detail {
+    padding: 10px;
+    width: 100vw;
+    left: 0;
+    top: 0;
+    border-radius: 0;
+    min-width: 0;
+  }
+  .close-btn {
+    font-size: 1.2em;
+    padding: 8px 16px;
+  }
+  .ingredients, .steps, .tips {
+    margin-bottom: 1rem;
+  }
+  .ingredients h3, .steps h3, .tips h3 {
+    font-size: 1em;
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
+  }
+  .step-item {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+  .step-number {
+    width: 40px;
+    height: 40px;
+    font-size: 1em;
+  }
+  .back-button {
+    left: 8px;
+    top: 8px;
+    width: 36px;
+    height: 36px;
   }
 }
 </style>

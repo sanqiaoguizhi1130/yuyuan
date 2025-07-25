@@ -2,7 +2,7 @@
 <template>
     <div class="fullscreen-container">
         <div class="size">
-            <div class="center-text">我很的爱你 句句不轻易</div>
+            <div class="center-text">我真的爱你 句句不轻易</div>
         </div>
         <div class="gradient-background">
             <div class="centertext">芋圆物语</div>

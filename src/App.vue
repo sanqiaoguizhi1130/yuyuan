@@ -21,13 +21,25 @@
 
     </div>
     <!-- 固定导航栏 -->
-    <nav class="global-nav">
+    <nav class="global-nav" v-if="!isMobile">
       <router-link v-for="item in globalNavItems" :key="item.path" :to="item.path" class="nav-link">
-        {{ item.name }}
+        <span class="nav-icon"><img :src="item.icon" alt="" /></span>
+        <span class="nav-title-text">{{ item.name }}</span>
       </router-link>
-
     </nav>
-
+    <!-- 手机端菜单按钮 -->
+    <div class="mobile-menu-btn" v-if="isMobile" @click="menuOpen = !menuOpen">
+      <svg width="28" height="28" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <!-- 手机端弹出菜单 -->
+    <transition name="fade">
+      <div class="mobile-nav-menu" v-if="menuOpen">
+        <router-link v-for="item in globalNavItems" :key="item.path" :to="item.path" class="mobile-nav-link" @click.native="menuOpen = false">
+          <span class="nav-icon"><img :src="item.icon" alt="" /></span>
+          <span class="nav-title-text">{{ item.name }}</span>
+        </router-link>
+      </div>
+    </transition>
     <!-- 页面内容区域 -->
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
@@ -49,19 +61,23 @@ const progress = ref(0)
 const songs = ref([])
 const currentTrackIndex = ref(0)
 const currentTrack = computed(() => songs.value[currentTrackIndex.value])
-
+const menuOpen = ref(false)
+const isMobile = ref(window.innerWidth <= 480)
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth <= 480
+  if (!isMobile.value) menuOpen.value = false
+}
 
 
 // 全局导航配置
 const globalNavItems = ref([
-  { name: '首页', path: '/' },
-  { name: '我们', path: '/album' },
-  { name: '可爱圃', path: '/petphotos' },
-  { name: '菜谱', path: '/cookmenu' },
-  { name: '备忘录', path: '/memorandum' },
-  { name: '树洞', path: '/messageboard' },
-  { name: '音乐', path: '/music' },
-
+  { name: '首页', path: '/', icon: require('./assets/icons/home.svg') },
+  { name: '我们', path: '/album', icon: require('./assets/icons/照相机.svg') },
+  { name: '可爱圃', path: '/petphotos', icon: require('./assets/icons/宠物猫.svg') },
+  { name: '菜谱', path: '/cookmenu', icon: require('./assets/icons/吃饭.svg') },
+  { name: '备忘录', path: '/memorandum', icon: require('./assets/icons/备忘录.svg') },
+  { name: '树洞', path: '/messageboard', icon: require('./assets/icons/情绪树洞.svg') },
+  { name: '音乐', path: '/music', icon: require('./assets/icons/音乐.svg') },
 ])
 
 
@@ -130,6 +146,7 @@ const updateProgress = () => {
 onMounted(async () => {
   await fetchMusic()
   await loadTrack()
+  window.addEventListener('resize', updateIsMobile)
 })
 </script>
 
@@ -192,6 +209,9 @@ body {
   transition: all 0.3s ease;
   border-radius: 4px;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-link:hover {
@@ -244,6 +264,60 @@ body {
     font-size: 0.9rem;
     padding: 0.4rem 0.8rem;
   }
+}
+
+@media (max-width: 480px) {
+  .global-nav { display: none; }
+  .nav-title-text {
+    display: none !important;
+  }
+  .mobile-nav-link .nav-title-text {
+    display: none !important;
+  }
+  .mobile-menu-btn {
+    position: fixed;
+    top: 0.5em;
+    right: 1em;
+    z-index: 2000;
+    border-radius: 50%;
+    padding: 0.4em;
+    cursor: pointer;
+  }
+  .mobile-nav-menu {
+    position: fixed;
+    top: 0; right: 0; left: 0; bottom: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 1999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-nav-link {
+    color: #fff;
+    font-size: 1.3em;
+    margin: 1em 0;
+    display: flex;
+    align-items: center;
+  }
+  .mobile-nav-link .nav-icon img {
+    width: 2em;
+    height: 2em;
+    margin-right: 0.7em;
+  }
+}
+
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
+.nav-icon img {
+  width: 1.5em;
+  height: 1.5em;
+  display: block;
 }
 
 .music-player {

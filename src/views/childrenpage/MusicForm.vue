@@ -1,21 +1,18 @@
 <template>
     <div class="bg">
-        <router-link to="/" class="back-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path d="M20 11H7.414l4.293-4.293-1.414-1.414L3.586 12l6.707 6.707 1.414-1.414L7.414 13H20z" />
-            </svg>
-        </router-link>
-        <h1 class="module-title">🎵 那些情歌</h1>
-        <div class="music-container">
-            <div class="upload-area" @click="$refs.musicInput.click()">
-                <span>🎵 点击上传音乐 (MP3, WAV, OGG)</span>
+        <div class="album-container"><router-link to="/" class="back-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M20 11H7.414l4.293-4.293-1.414-1.414L3.586 12l6.707 6.707 1.414-1.414L7.414 13H20z" />
+                </svg>
+            </router-link>
+            <h1 class="module-title">那些情歌</h1>
+            <div class="music-upload-area" @click="$refs.musicInput.click()">
+                <span>点击上传音乐</span>
                 <input type="file" ref="musicInput" @change="handleFileChange" accept="audio/*" style="display: none">
             </div>
-
             <div v-if="error" class="error-message">{{ error }}</div>
 
-            <!-- 播放器控件 -->
-            <div class="player-controls" v-if="currentSong">
+            <div class="music-list-card"><div class="player-controls" v-if="currentSong">
                 <button @click="togglePlay" class="play-button">
                     {{ isPlaying ? '⏸️' : '▶️' }}
                 </button>
@@ -25,14 +22,10 @@
                 </div>
                 <button @click="stop" class="stop-button">⏹️</button>
             </div>
-
-            <!-- 进度条 -->
             <div class="progress-container" v-if="currentSong">
                 <input type="range" v-model="progress" max="100" class="progress-bar">
                 <span class="time">{{ currentTime }} / {{ duration }}</span>
             </div>
-
-            <!-- 歌曲列表 -->
             <div class="song-list">
                 <div v-for="song in songs" :key="song.id"
                     :class="['song-item', { active: currentSong && currentSong.id === song.id }]"
@@ -46,8 +39,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 编辑对话框 -->
             <div v-if="showEditDialog" class="dialog-overlay">
                 <div class="edit-dialog">
                     <h3>编辑歌曲信息</h3>
@@ -66,8 +57,9 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div></div>
 
+            
             <audio ref="audioPlayer" @timeupdate="updateProgress" @ended="onSongEnded"></audio>
         </div>
     </div>
@@ -269,151 +261,211 @@ const deleteSong = async (id) => {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
 }
 
-.music-container {
-    width: 800px;
-    min-height: 80vh;
+.album-container {
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    color: #333;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
 }
 
-.upload-area {
-    padding: 20px;
-    margin: 20px 0;
+.music-upload-card,
+.music-list-card {
+    width: 1200px;
+    max-width: 96vw;
+    margin: 40px auto 18px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    padding: 18px 0;
+}
+
+.music-upload-card {
+    background: #f9f7f3;
+}
+
+.music-list-card {
+    background: #fff;
+}
+
+.module-title {
+    text-align: center;
+    color: #666;
+    font-weight: 700;
+    margin: 30px 0 18px 0;
+    letter-spacing: 2px;
+}
+
+.music-upload-area {
+    padding: 40px;
+    margin-top: 40px;
+    margin-bottom: 20px;
     text-align: center;
     background: rgba(0, 0, 0, 0.05);
     border: 2px dashed #ccc;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s;
 }
 
-.upload-area:hover {
+.music-upload-area:hover {
     background: rgba(0, 0, 0, 0.1);
     border-color: #999;
 }
 
 .error-message {
-    color: #dc3545;
-    padding: 10px;
-    margin: 10px 0;
-    background: #ffebee;
-    border-radius: 4px;
+    color: #d32f2f;
+    background: #fff0f0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 0 0 8px 0;
+    text-align: center;
+    font-size: 1em;
 }
 
 .player-controls {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px;
+    gap: 10px;
     background: #f8f9fa;
-    border-radius: 8px;
-    margin: 15px 0;
+    border-radius: 10px;
+    padding: 12px 10px;
+    margin: 0 0 6px 0;
 }
 
 .play-button,
 .stop-button {
-    font-size: 24px;
+    font-size: 1.7em;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0 15px;
+    color: #f8b500;
+    padding: 0 10px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.play-button:hover,
+.stop-button:hover {
+    background: #fffbe6;
 }
 
 .song-info {
     flex: 1;
-    padding: 0 15px;
+    padding: 0 8px;
+    text-align: left;
 }
 
 .song-info h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 1.1em;
+    color: #333;
+    font-weight: 600;
 }
 
 .song-info p {
-    margin: 5px 0 0;
-    color: #666;
-    font-size: 14px;
+    margin: 2px 0 0 0;
+    color: #b48a00;
+    font-size: 0.98em;
 }
 
 .progress-container {
-    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px 0;
 }
 
 .progress-bar {
-    width: 100%;
-    margin-bottom: 5px;
+    flex: 1;
+    height: 5px;
+    background: #ffe082;
+    border-radius: 3px;
+    outline: none;
+    accent-color: #f8b500;
 }
 
 .time {
-    display: block;
+    font-size: 0.95em;
+    color: #b48a00;
+    min-width: 70px;
     text-align: right;
-    font-size: 12px;
-    color: #666;
 }
 
 .song-list {
-    margin-top: 20px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .song-item {
     display: flex;
     align-items: center;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 10px 8px;
     background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(248, 181, 0, 0.06);
     cursor: pointer;
-    transition: all 0.2s;
-}
-
-.song-item:hover {
-    background: #f0f0f0;
+    transition: background 0.2s;
+    gap: 8px;
 }
 
 .song-item.active {
-    background: #e3f2fd;
+    background: #fffbe6;
 }
 
 .song-title {
     flex: 2;
-    font-weight: 500;
+    font-weight: 600;
+    color: #f8b500;
+    font-size: 1.08em;
 }
 
 .song-artist {
     flex: 1;
-    color: #666;
+    color: #b48a00;
+    font-size: 1em;
 }
 
 .song-duration {
-    margin: 0 15px;
-    color: #666;
-}
-
-.delete-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #dc3545;
-    font-size: 16px;
+    min-width: 48px;
+    color: #b48a00;
+    font-size: 0.98em;
 }
 
 .song-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
-.edit-btn {
+.edit-btn,
+.delete-btn {
     background: none;
     border: none;
     cursor: pointer;
-    color: #4285f4;
-    font-size: 16px;
+    font-size: 1.1em;
+    border-radius: 4px;
+    padding: 4px 2px;
+    transition: background 0.2s;
+}
+
+.edit-btn {
+    color: #f8b500;
+}
+
+.delete-btn {
+    color: #d32f2f;
+}
+
+.edit-btn:hover {
+    background: #fffbe6;
+}
+
+.delete-btn:hover {
+    background: #ffeaea;
 }
 
 .dialog-overlay {
@@ -422,7 +474,7 @@ const deleteSong = async (id) => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -430,31 +482,37 @@ const deleteSong = async (id) => {
 }
 
 .edit-dialog {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    max-width: 90%;
+    background: #fff;
+    padding: 18px 12px;
+    border-radius: 12px;
+    width: 95vw;
+    max-width: 380px;
+    box-shadow: 0 2px 12px rgba(248, 181, 0, 0.10);
 }
 
 .edit-dialog h3 {
     margin-top: 0;
+    color: #f8b500;
+    font-size: 1.2em;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
+    color: #b48a00;
+    font-size: 1em;
 }
 
 .form-group input {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 7px 10px;
+    border: 1px solid #ffe082;
+    border-radius: 6px;
+    font-size: 1em;
 }
 
 .dialog-buttons {
@@ -464,64 +522,98 @@ const deleteSong = async (id) => {
 }
 
 .save-btn {
-    background: #4285f4;
+    background: #f8b500;
     color: white;
     border: none;
     padding: 8px 15px;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 1em;
 }
 
 .cancel-btn {
     background: #f1f1f1;
     border: none;
     padding: 8px 15px;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 1em;
 }
 
 .save-btn:hover {
-    background: #3367d6;
+    background: #f6a700;
 }
 
 .cancel-btn:hover {
-    background: #ddd;
+    background: #ffe082;
 }
 
 .back-button {
     position: fixed;
-    left: 20px;
-    top: 20px;
-    color: #ffffff;
+    left: 18px;
+    top: 12px;
+    color: #fff;
     transition: all 0.3s;
     display: flex;
     align-items: center;
     z-index: 10001;
-    transform: translateZ(1px);
-    /* 创建独立渲染层 */
-    will-change: transform;
-    /* 优化动画性能 */
-    pointer-events: auto;
-    /* 确保点击穿透 */
-    line-height: 0;
-    /* 消除行高导致的间隙 */
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(248, 181, 0, 0.10);
 }
 
 .back-button svg {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     fill: currentColor;
 }
 
 .back-button:hover {
-    color: #2196F3;
-    transform: translateX(-3px);
+    color: #fffbe6;
+    background: #f6a700;
 }
 
-.module-title {
-    text-align: center;
-    margin: 30px 0;
-    color: #666;
-    margin-top: 50px;
+@media (max-width: 480px) {
+    .album-container {
+        padding: 5px;
+    }
+
+    .music-upload-card,
+    .music-list-card {
+        width: 95vw;
+        max-width: 99vw;
+        padding: 10px 4px;
+        border-radius: 8px;
+    }
+
+    .music-upload-area {
+        padding: 40px;
+        font-size: 1em;
+        border-radius: 8px;
+    }
+
+    .edit-dialog {
+        width: 98vw;
+        max-width: 98vw;
+        min-width: 0;
+        border-radius: 10px;
+        padding: 10px 2px;
+    }
+
+    .module-title {
+        font-size: 1.2em;
+        margin: 45px 0 0 0;
+    }
+
+    .song-list {
+        padding: 0 8px;
+    }
+
+    .song-item {
+        margin-left: 2px;
+        margin-right: 2px;
+    }
 }
 </style>

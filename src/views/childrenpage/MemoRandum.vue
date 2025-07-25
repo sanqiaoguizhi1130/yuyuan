@@ -8,7 +8,7 @@
       </svg>
     </router-link>
     <div class="memo-header">
-      <h1>💌 爱的记忆博物馆</h1>
+      <h1>爱的记忆博物馆</h1>
       <div class="control-panel">
         <button class="add-btn" @click="showForm = true">+ 新记忆</button>
         <div class="filter-group">
@@ -583,7 +583,7 @@ const getCategoryIcon = (category) => {
 .back-button {
   position: fixed;
   left: 20px;
-  top: 20px;
+  top: 6px;
   color: #ffffff;
   transition: all 0.3s;
   display: flex;
@@ -655,5 +655,60 @@ const getCategoryIcon = (category) => {
   white-space: nowrap;
 }
 
+@media (max-width: 480px) {
+  .memo-container {
+    padding: 5px;
+  }
+  .memo-header h1 {
+    font-size: 1.2em;
+    margin-top: 15px;
+  }
+  .control-panel {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .add-btn, .category-select, .search-input {
+    font-size: 1em;
+    padding: 8px 12px;
+  }
+  .memo-form {
+    padding: 10px;
+  }
+  .form-row label {
+    font-size: 1em;
+  }
+  .form-row input, .form-row select, .form-row textarea {
+    font-size: 1em;
+    padding: 6px 8px;
+  }
+  .form-actions button {
+    font-size: 1em;
+    padding: 8px 12px;
+  }
+  .timeline {
+    padding: 0 2px;
+  }
+  .timeline-item {
+    font-size: 1em;
+    padding: 8px 4px;
+  }
+  .memo-title, .memo-content {
+    font-size: 1em;
+  }
+  .edit-btn, .delete-btn {
+    font-size: 1em;
+    padding: 4px 8px;
+  }
+  .back-button {
+    left: 8px;
+    top: 8px;
+    width: 36px;
+    height: 36px;
+  }
+  .empty-state {
+    padding: 15px;
+    font-size: 1em;
+  }
+}
 
 </style>

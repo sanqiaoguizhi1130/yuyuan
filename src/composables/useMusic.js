@@ -1,6 +1,6 @@
 // src/composables/useMusic.js
 import { ref } from "vue";
-import { supabase } from '../supabase/client';
+import { supabase } from '../supabase/client.js';
 
 export const useMusic = () => {
   const songs = ref([]);

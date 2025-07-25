@@ -43,4 +43,19 @@ export default {
 img {
     width: 100%;
 }
+
+@media (max-width: 480px) {
+  .gallery-container {
+    grid-template-columns: 1fr;
+    grid-gap: 6px;
+    padding: 4px;
+  }
+  .gallery-item {
+    margin-bottom: 6px;
+  }
+  img {
+    max-width: 98vw;
+    height: auto;
+  }
+}
 </style>

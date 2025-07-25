@@ -7,10 +7,10 @@
                     <path d="M20 11H7.414l4.293-4.293-1.414-1.414L3.586 12l6.707 6.707 1.414-1.414L7.414 13H20z" />
                 </svg>
             </router-link>
-            <h1 class="module-title">💌 我想对你说</h1>
+            <h1 class="module-title">我想对你说</h1>
             <!-- 留言输入区 -->
             <div class="message-input">
-                <textarea v-model="newMessage" placeholder="写下你的心里话..." rows="3" maxlength="200"></textarea>
+                <textarea v-model="newMessage" placeholder="写下你的心里话..." rows="3" maxlength="180"></textarea>
                 <div class="gender-select">
                     <button v-for="opt in genderOptions" :key="opt.value"
                         :class="['gender-btn', { active: selectedGender === opt.value }]"
@@ -337,10 +337,53 @@ textarea {
     }
 }
 
+@media (max-width: 480px) {
+  .message-container {
+    padding: 5px;
+  }
+  .module-title {
+    font-size: 1.2em;
+    margin-top: 35px;
+    padding-top: 15px;
+  }
+  .message-input {
+    padding: 8px;
+  }
+  textarea {
+    font-size: 1em;
+    padding: 5px
+  }
+  .gender-btn, .submit-btn {
+    font-size: 1em;
+    padding: 8px 12px;
+  }
+  .message-list {
+    padding: 0 2px;
+  }
+  .message-item {
+    font-size: 1em;
+    padding: 8px 4px;
+  }
+  .edit-btn, .delete-btn {
+    font-size: 1em;
+    padding: 4px 8px;
+  }
+  .back-button {
+    left: 8px;
+    top: 8px;
+    width: 36px;
+    height: 36px;
+  }
+  .loading, .empty {
+    padding: 15px;
+    font-size: 1em;
+  }
+}
+
 .back-button {
   position: fixed;
   left: 20px;
-  top: 20px;
+  top: 6px;
   color: #ffffff;
   transition: all 0.3s;
   display: flex;
@@ -361,10 +404,5 @@ textarea {
 .back-button:hover {
     color: #2196F3;
     transform: translateX(-3px);
-}
-
-/* 调整标题位置避免重叠 */
-.module-title {
-    margin-top: 30px;
 }
 </style>
