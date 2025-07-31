@@ -216,7 +216,7 @@ const {
 } = useRecipes()
 
 const currentCategory = ref('全部')
-const categories = ['全部', '家常菜', '快手菜', '硬菜', '主食']
+const categories = ['全部', '家常菜', '硬菜', '主食']
 const selectedRecipe = ref(null)
 
 const filteredRecipes = computed(() => {

@@ -323,7 +323,7 @@ body {
 .music-player {
   position: fixed;
   bottom: 15px;
-  left: 10%;
+  left: 25%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
