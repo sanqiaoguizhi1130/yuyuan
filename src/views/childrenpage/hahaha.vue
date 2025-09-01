@@ -144,25 +144,43 @@ export default {
     },
     
     async getBaiduToken() {
-      const url = '/api/baidu/oauth/2.0/token'
+      // 根据环境选择不同的URL
+      const isDev = process.env.NODE_ENV === 'development'
+      const baseUrl = isDev ? '/api/baidu' : 'https://aip.baidubce.com'
+      const url = `${baseUrl}/oauth/2.0/token`
+      
       const params = new URLSearchParams({
         grant_type: 'client_credentials',
         client_id: this.baiduConfig.apiKey,
         client_secret: this.baiduConfig.secretKey
       })
       
-      const response = await fetch(`${url}?${params}`)
-      const data = await response.json()
-      
-      if (data.access_token) {
-        return data.access_token
-      } else {
-        throw new Error('获取访问令牌失败')
+      try {
+        const response = await fetch(`${url}?${params}`)
+        
+        // 检查响应状态
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
+        const data = await response.json()
+        
+        if (data.access_token) {
+          return data.access_token
+        } else {
+          throw new Error('获取访问令牌失败')
+        }
+      } catch (error) {
+        console.error('获取百度AI token失败:', error)
+        throw new Error(`获取访问令牌失败: ${error.message}`)
       }
     },
     
     async analyzeFace(token, base64Image) {
-      const url = `/api/baidu/rest/2.0/face/v3/detect?access_token=${token}`
+      // 根据环境选择不同的URL
+      const isDev = process.env.NODE_ENV === 'development'
+      const baseUrl = isDev ? '/api/baidu' : 'https://aip.baidubce.com'
+      const url = `${baseUrl}/rest/2.0/face/v3/detect?access_token=${token}`
       
       const body = {
         image: base64Image,
@@ -171,15 +189,25 @@ export default {
         face_type: 'LIVE'
       }
       
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      })
-      
-      return await response.json()
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        })
+        
+        // 检查响应状态
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
+        return await response.json()
+      } catch (error) {
+        console.error('人脸识别失败:', error)
+        throw new Error(`人脸识别失败: ${error.message}`)
+      }
     },
     
     fileToBase64(file) {
@@ -368,3 +396,4 @@ h2 {
   }
 }
 </style>
+ 
