@@ -6,9 +6,7 @@
       <!-- 环境提示 -->
       <div v-if="isProduction" class="env-notice">
         <p>🌐 当前运行在生产环境</p>
-        <p v-if="!hasProxySupport" class="warning">
-          ⚠️ 检测到可能的跨域问题，如果遇到错误，请联系管理员配置服务器代理
-        </p>
+        <p class="success">✅ 使用Vercel代理，CORS问题已解决</p>
       </div>
       
       <div class="upload-section">
@@ -181,11 +179,8 @@ export default {
     },
     
     async getBaiduToken() {
-      // 根据环境选择不同的URL
-      const isDev = process.env.NODE_ENV === 'development'
-      // 生产环境使用代理服务器，开发环境使用Vue代理
-      const baseUrl = isDev ? '/api/baidu' : 'https://your-proxy-server.com/api/baidu'
-      const url = `${baseUrl}/oauth/2.0/token`
+      // 使用Vercel代理，统一处理开发和生产环境
+      const url = '/api/baidu/oauth/2.0/token'
       
       const params = new URLSearchParams({
         grant_type: 'client_credentials',
@@ -230,11 +225,8 @@ export default {
     },
     
     async analyzeFace(token, base64Image) {
-      // 根据环境选择不同的URL
-      const isDev = process.env.NODE_ENV === 'development'
-      // 生产环境使用代理服务器，开发环境使用Vue代理
-      const baseUrl = isDev ? '/api/baidu' : 'https://your-proxy-server.com/api/baidu'
-      const url = `${baseUrl}/rest/2.0/face/v3/detect?access_token=${token}`
+      // 使用Vercel代理，统一处理开发和生产环境
+      const url = `/api/baidu/rest/2.0/face/v3/detect?access_token=${token}`
       
       const body = {
         image: base64Image,
@@ -362,6 +354,11 @@ h2 {
 
 .env-notice .warning {
   color: #f57c00;
+  font-weight: 600;
+}
+
+.env-notice .success {
+  color: #388e3c;
   font-weight: 600;
 }
 

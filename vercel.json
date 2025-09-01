@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/baidu/(.*)",
+      "dest": "https://aip.baidubce.com/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "https://www.yuyuan.xz.cn",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Credentials": "true"
+      }
+    }
+  ],
+  "functions": {
+    "api/baidu/**/*.js": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/baidu/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://www.yuyuan.xz.cn"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ]
+}
