@@ -3,6 +3,14 @@
     <div class="container">
       <h2>人脸识别分析</h2>
       
+      <!-- 环境提示 -->
+      <div v-if="isProduction" class="env-notice">
+        <p>🌐 当前运行在生产环境</p>
+        <p v-if="!hasProxySupport" class="warning">
+          ⚠️ 检测到可能的跨域问题，如果遇到错误，请联系管理员配置服务器代理
+        </p>
+      </div>
+      
       <div class="upload-section">
         <div class="form">
           <input 
@@ -73,6 +81,9 @@ export default {
       isUploading: false,
       analysisResult: null,
       errorMessage: '',
+      // 环境检测
+      isProduction: process.env.NODE_ENV === 'production',
+      hasProxySupport: false,
       // 百度AI配置
       baiduConfig: {
         apiKey: 'NlagRTGdRIVRKWsRB3vs6xoj',
@@ -80,7 +91,22 @@ export default {
       }
     }
   },
+  mounted() {
+    // 检测代理支持
+    this.checkProxySupport()
+  },
   methods: {
+    async checkProxySupport() {
+      if (this.isProduction) {
+        try {
+          // 尝试访问代理路径
+          const response = await fetch('/api/baidu/oauth/2.0/token?grant_type=client_credentials&client_id=test&client_secret=test')
+          this.hasProxySupport = response.ok
+        } catch (error) {
+          this.hasProxySupport = false
+        }
+      }
+    },
     handleFileChange(event) {
       const file = event.target.files[0]
       if (file) {
@@ -137,7 +163,18 @@ export default {
           this.errorMessage = `识别失败: ${result.error_msg}`
         }
       } catch (error) {
-        this.errorMessage = `请求失败: ${error.message}`
+        console.error('人脸识别完整错误:', error)
+        
+        // 提供更友好的错误信息
+        if (error.message.includes('JSON')) {
+          this.errorMessage = '服务器响应格式错误，可能是网络或服务器配置问题。请检查网络连接或联系管理员。'
+        } else if (error.message.includes('CORS')) {
+          this.errorMessage = '跨域请求被阻止，这是生产环境的常见问题。请联系管理员配置服务器。'
+        } else if (error.message.includes('fetch')) {
+          this.errorMessage = '网络请求失败，请检查网络连接。'
+        } else {
+          this.errorMessage = `请求失败: ${error.message}`
+        }
       } finally {
         this.isUploading = false
       }
@@ -156,14 +193,29 @@ export default {
       })
       
       try {
+        console.log('正在请求百度AI token，URL:', url)
         const response = await fetch(`${url}?${params}`)
+        
+        console.log('响应状态:', response.status, response.statusText)
+        console.log('响应头:', Object.fromEntries(response.headers.entries()))
         
         // 检查响应状态
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`)
         }
         
+        // 检查响应类型
+        const contentType = response.headers.get('content-type')
+        if (!contentType || !contentType.includes('application/json')) {
+          console.warn('响应不是JSON格式:', contentType)
+          // 尝试读取响应文本进行调试
+          const text = await response.text()
+          console.log('响应内容:', text.substring(0, 200) + '...')
+          throw new Error('服务器返回的不是JSON格式数据')
+        }
+        
         const data = await response.json()
+        console.log('获取到的token数据:', data)
         
         if (data.access_token) {
           return data.access_token
@@ -190,6 +242,7 @@ export default {
       }
       
       try {
+        console.log('正在请求人脸识别，URL:', url)
         const response = await fetch(url, {
           method: 'POST',
           headers: {
@@ -198,12 +251,27 @@ export default {
           body: JSON.stringify(body)
         })
         
+        console.log('响应状态:', response.status, response.statusText)
+        console.log('响应头:', Object.fromEntries(response.headers.entries()))
+        
         // 检查响应状态
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`)
         }
         
-        return await response.json()
+        // 检查响应类型
+        const contentType = response.headers.get('content-type')
+        if (!contentType || !contentType.includes('application/json')) {
+          console.warn('响应不是JSON格式:', contentType)
+          // 尝试读取响应文本进行调试
+          const text = await response.text()
+          console.log('响应内容:', text.substring(0, 200) + '...')
+          throw new Error('服务器返回的不是JSON格式数据')
+        }
+        
+        const result = await response.json()
+        console.log('人脸识别结果:', result)
+        return result
       } catch (error) {
         console.error('人脸识别失败:', error)
         throw new Error(`人脸识别失败: ${error.message}`)
@@ -273,6 +341,26 @@ h2 {
   color: #333;
   margin-bottom: 30px;
   font-size: 28px;
+}
+
+.env-notice {
+  background: #e3f2fd;
+  border: 1px solid #2196f3;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.env-notice p {
+  margin: 5px 0;
+  color: #1976d2;
+  font-size: 14px;
+}
+
+.env-notice .warning {
+  color: #f57c00;
+  font-weight: 600;
 }
 
 .upload-section {
