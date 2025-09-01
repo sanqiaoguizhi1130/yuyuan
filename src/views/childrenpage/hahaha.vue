@@ -183,7 +183,8 @@ export default {
     async getBaiduToken() {
       // 根据环境选择不同的URL
       const isDev = process.env.NODE_ENV === 'development'
-      const baseUrl = isDev ? '/api/baidu' : 'https://aip.baidubce.com'
+      // 生产环境使用代理服务器，开发环境使用Vue代理
+      const baseUrl = isDev ? '/api/baidu' : 'https://your-proxy-server.com/api/baidu'
       const url = `${baseUrl}/oauth/2.0/token`
       
       const params = new URLSearchParams({
@@ -231,7 +232,8 @@ export default {
     async analyzeFace(token, base64Image) {
       // 根据环境选择不同的URL
       const isDev = process.env.NODE_ENV === 'development'
-      const baseUrl = isDev ? '/api/baidu' : 'https://aip.baidubce.com'
+      // 生产环境使用代理服务器，开发环境使用Vue代理
+      const baseUrl = isDev ? '/api/baidu' : 'https://your-proxy-server.com/api/baidu'
       const url = `${baseUrl}/rest/2.0/face/v3/detect?access_token=${token}`
       
       const body = {
