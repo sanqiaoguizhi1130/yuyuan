@@ -89,6 +89,10 @@ export default {
                 this.$router.push({ path: "/memorandum" });
                 return
             }
+            if (index === 4) {
+                this.$router.push({ path: "/messageboard" });
+                return
+            }
         }
     },
     mounted() {

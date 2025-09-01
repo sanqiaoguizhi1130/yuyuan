@@ -7,8 +7,7 @@ import MemoRandum from '../views/childrenpage/MemoRandum.vue'
 import MusicForm from '../views/childrenpage/MusicForm.vue';
 import PetPhotos from '../views/childrenpage/PetPhotos.vue';
 import MessageBoard from '../views/childrenpage/MessageBoard.vue';
-
-
+import FaceRecognition from '../views/childrenpage/hahaha.vue';
 
 
 Vue.use(VueRouter)
@@ -47,6 +46,11 @@ const routes = [{
     path: '/music',
     name: 'music',
     component: MusicForm,
+  },
+  {
+    path: '/face',
+    name: 'face',
+    component: FaceRecognition,
   },
 ]
 

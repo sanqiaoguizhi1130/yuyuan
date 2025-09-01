@@ -11,6 +11,9 @@
       <h1>爱的记忆博物馆</h1>
       <div class="control-panel">
         <button class="add-btn" @click="showForm = true">+ 新记忆</button>
+        <router-link to="/face" class="ai-btn">
+          <span>1</span>
+        </router-link>
         <div class="filter-group">
           <select v-model="selectedCategory" class="category-select">
             <option value="all">所有类型</option>
