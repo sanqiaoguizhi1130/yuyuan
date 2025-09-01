@@ -3,12 +3,6 @@
     <div class="container">
       <h2>人脸识别分析</h2>
       
-      <!-- 环境提示 -->
-      <div v-if="isProduction" class="env-notice">
-        <p>🌐 当前运行在生产环境</p>
-        <p class="success">✅ 使用Vercel代理，CORS问题已解决</p>
-      </div>
-      
       <div class="upload-section">
         <div class="form">
           <input 
